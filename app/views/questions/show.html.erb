@@ -1,3 +1,11 @@
+<h1>
+  <%= @question[:question_title] %>
+</h1>
+
 <p>
   <%= @question[:question_body] %>
 </p>
+
+<%= link_to 'Edit', controller: 'questions', action: 'edit', id: @question[:_uid_] %> |
+<%= link_to 'Destroy', @question, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<%= link_to 'Back', questions_path %>

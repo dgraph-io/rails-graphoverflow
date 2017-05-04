@@ -1,6 +1,6 @@
-<%= form_for :question, url: '/questions' do |f| %>
-  Title: <%= f.text_field :question_title %><br />
-  Content: <%= f.text_area :question_body %><br />
+<%= form_for :question, { url: target, method: method } do |f| %>
+  Title: <%= f.text_field :question_title, value: @question.fetch(:question_title, '') %><br />
+  Content: <%= f.text_area :question_body, value: @question.fetch(:question_body, '') %><br />
 
   <div class="actions">
     <%= f.submit %>

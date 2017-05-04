@@ -4,7 +4,9 @@
 
 <ul>
   <% @questions.each do |question| %>
-    <li><%= question["question_body"] %></li>
+    <li>
+      <%= link_to question[:question_title], controller: 'questions', action: 'show', id: question[:_uid_] %>
+    </li>
   <% end %>
 </ul>
 
