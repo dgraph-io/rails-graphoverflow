@@ -1,0 +1,40 @@
+mutation {
+  schema {
+    question_title: string .
+    question_body: string .
+    topic_name: string .
+    answer_body: string .
+    comment_body: string .
+    question_topic: uid @reverse .
+    upvoted_by: uid @reverse .
+    written_by: uid @reverse .
+  }
+
+  set {
+    <t1> <topic_name> "ruby" .
+    <t2> <topic_name> "rails" .
+    <t3> <topic_name> "javascript" .
+    <t4> <topic_name> "node.js" .
+    <t5> <topic_name> "golang" .
+
+    <u1> <user_name> "jon" .
+    <u2> <user_name> "alex" .
+    <u3> <user_name> "daniel" .
+    <u4> <user_name> "conor" .
+    <u5> <user_name> "joanna" .'
+    <u6> <user_name> "holly" .
+    <u7> <user_name> "michelle" .
+    <u8> <user_name> "page" .
+
+    <q1> <question_title> "aaaa" .
+    <q1> <question_body> "asdf" .
+    <q1> <question_topic> <t1> .
+    <a1-q1> <answer_body> "asdf" .
+    <a1-q1> <upvoted_by> <u1> .
+    <c1-q1> <comment_body> "asdf" .
+    <c1-q1> <written_by> <u1> .
+
+    <v1> <viewer> <u1> .
+    <v1> <viewee> <q1> .
+  }
+}
