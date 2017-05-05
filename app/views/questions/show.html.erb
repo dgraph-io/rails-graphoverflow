@@ -6,6 +6,15 @@
   <%= @question[:question_body] %>
 </p>
 
+<ul class="answers">
+  <% @answers.each do |answer| %>
+    <%= render partial: 'answers/answer', locals: { answer: answer } %>
+  <% end %>
+</ul>
+
+<%= render partial: 'answers/form',
+  locals: {answer: {}, target: '/answers', method: :post, question_id: @question[:_uid_] } %>
+
 <%= link_to 'Edit', controller: 'questions', action: 'edit', id: @question[:_uid_] %> |
 <%= link_to 'Destroy', @question, method: :delete, data: { confirm: 'Are you sure?' } %> |
 <%= link_to 'Back', questions_path %>

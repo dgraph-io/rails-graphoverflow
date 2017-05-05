@@ -1,0 +1,8 @@
+<li class="answer">
+  <div class="actions">
+    <%= link_to 'Remove', "/answers/#{answer[:_uid_]}", method: :delete, data: { confirm: 'Are you sure?' } %>
+  </div>
+  <section class="body">
+    <%= answer[:answer_body] %>
+  </section>
+</li>

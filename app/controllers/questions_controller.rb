@@ -1,7 +1,7 @@
 require 'dgraph_client'
 
 class QuestionsController < ApplicationController
-  before_action :set_question, only: [:show, :edit]
+  before_action :set_question, only: [:edit]
 
   def index
     query = %q(
@@ -16,12 +16,31 @@ class QuestionsController < ApplicationController
     client = ::DgraphClient.new()
     json = client.do(query)
 
-    puts json
-
     @questions = json.fetch(:questions, [])
   end
 
   def show
+    query = %Q(
+{
+  question(id:#{params[:id]}) {
+    _uid_
+    question_body
+    question_title
+    answer(first: 10) @filter(gt(count(answer_body), 0)) {
+      _uid_
+      answer_body
+    }
+  }
+}
+)
+
+    client = ::DgraphClient.new()
+    json = client.do(query)
+
+    puts json
+
+    @question = json[:question][0]
+    @answers = @question.fetch(:answer, [])
   end
 
   def new
@@ -86,8 +105,9 @@ mutation {
   end
 
   private
-    def set_question
-      query = %Q(
+
+  def set_question
+    query = %Q(
 {
   question(id:#{params[:id]}) {
     _uid_
@@ -97,9 +117,9 @@ mutation {
 }
 )
 
-      client = ::DgraphClient.new()
-      json = client.do(query)
+    client = ::DgraphClient.new()
+    json = client.do(query)
 
-      @question = json[:question][0]
-    end
+    @question = json[:question][0]
+  end
 end

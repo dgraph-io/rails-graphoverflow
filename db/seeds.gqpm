@@ -8,6 +8,7 @@ mutation {
     question_topic: uid @reverse .
     upvoted_by: uid @reverse .
     written_by: uid @reverse .
+    answer: uid @reverse .
   }
 
   set {
@@ -29,6 +30,7 @@ mutation {
     <q1> <question_title> "aaaa" .
     <q1> <question_body> "asdf" .
     <q1> <question_topic> <t1> .
+    <q1> <answer> <a1-q1> .
     <a1-q1> <answer_body> "asdf" .
     <a1-q1> <upvoted_by> <u1> .
     <c1-q1> <comment_body> "asdf" .
