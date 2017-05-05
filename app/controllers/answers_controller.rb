@@ -31,12 +31,9 @@ mutation {
 )
     client = ::DgraphClient.new()
     json = client.do(query)
-    answer_id = json[:uids][:answer]
-
-    @answer = { answer_body: answer_body, _uid_: answer_id }
 
     respond_to do |format|
-      format.js { }
+      format.html { redirect_to controller: 'questions', action: 'show', id: question_id }
     end
   end
 
@@ -71,7 +68,7 @@ mutation {
     json = client.do(query)
 
     respond_to do |format|
-      format.html { redirect_to controller: 'questions', action: 'index' }
+      format.html { redirect_to controller: 'questions', action: 'show', id: params[:question_id] }
     end
   end
 end

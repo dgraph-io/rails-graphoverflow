@@ -21,14 +21,27 @@ class QuestionsController < ApplicationController
 
   def show
     query = %Q(
+mutation {
+  set {
+    <_:view> <viewer> <u1> .
+    <_:view> <viewee> <#{params[:id]}> .
+  }
+}
+
 {
-  question(id:#{params[:id]}) {
+  user as var(id: u1)
+
+  question(id: #{params[:id]}) {
     _uid_
     question_body
     question_title
     answer(first: 10) @filter(gt(count(answer_body), 0)) {
       _uid_
       answer_body
+      ~upvoted @filter(var(user)) {
+        user_name
+      }
+      count(~upvoted)
     }
   }
 }

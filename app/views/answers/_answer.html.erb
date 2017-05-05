@@ -1,8 +1,15 @@
+<% not_upvoted = answer[:"~upvoted"].length == 1 %>
+<% upvote_count = answer[:"~upvoted"].reduce(0) { |memo,elm| memo + elm.fetch(:count, 0) }%>
+
 <li class="answer">
   <section class="body">
+    <div class="upvote-count"><%= upvote_count %></div>
     <%= answer[:answer_body] %>
   </section>
   <div class="actions">
-    <%= link_to 'Remove', "/answers/#{answer[:_uid_]}", method: :delete, data: { confirm: 'Are you sure?' } %>
+    <%= link_to 'Remove', "/answers/#{answer[:_uid_]}?question_id=#{question[:_uid_]}", method: :delete, data: { confirm: 'Are you sure?' } %>
+    <% if not_upvoted %>
+      <%= link_to 'Upvote', "/answers/#{answer[:_uid_]}/upvotes", method: :post %>
+    <% end %>
   </div>
 </li>
