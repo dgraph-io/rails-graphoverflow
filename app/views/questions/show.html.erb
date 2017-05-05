@@ -2,11 +2,13 @@
   <%= @question[:question_title] %>
 </h1>
 
+<hr>
+
 <p>
   <%= @question[:question_body] %>
 </p>
 
-<ul class="answers">
+<ul class="answers list-unstyled">
   <% @answers.each do |answer| %>
     <%= render partial: 'answers/answer', locals: { answer: answer } %>
   <% end %>

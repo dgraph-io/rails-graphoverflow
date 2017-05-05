@@ -2,14 +2,20 @@
 
 <h1>Questions</h1>
 
-<ul>
+<hr>
+
+<%= link_to 'New Question', new_question_path, class: 'btn btn-primary float-right' %>
+<ul class="questions list-unstyled">
   <% @questions.each do |question| %>
-    <li>
-      <%= link_to question[:question_title], controller: 'questions', action: 'show', id: question[:_uid_] %>
+    <li class="question">
+      <h2>
+        <%= link_to question[:question_title], controller: 'questions', action: 'show', id: question[:_uid_] %>
+      </h2>
+      <p>
+        <%= truncate question[:question_body] %>
+      </p>
     </li>
   <% end %>
 </ul>
 
 <br>
-
-<%= link_to 'New Question', new_question_path %>

@@ -2,5 +2,4 @@
 
 <%= render 'form', question: @question, method: 'put', target: "/questions/#{@question[:_uid_]}" %>
 
-<%= link_to 'Show', @question %> |
-<%= link_to 'Back', questions_path %>
+<%= link_to 'Back to question', controller: 'questions', action: 'show', id: @question[:_uid_] %>
