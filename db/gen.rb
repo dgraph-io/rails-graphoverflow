@@ -3,7 +3,10 @@ require 'date'
 
 num_users = 100
 num_questions = 20
-num_answers = 200
+num_answers = 20
+# num_users = 1000000
+# num_questions = 100000
+# num_answers = 3000000
 
 user_xids = Array.new(num_users) { |i| "u#{i+1}" }
 question_xids = Array.new(num_questions) { |i| "q#{i+1}" }
@@ -31,20 +34,20 @@ schema = %Q{
 }
 
 view_counter = 0
-set = "set {\n"
+set = ""
 
-question_xids.map { |xid|
+question_xids.each_with_index { |xid|
   created_at = (Date.today - rand(1..30)).to_datetime.rfc3339
-
   question_tree[xid] = []
 
-  "    <#{xid}> <question.title> \"#{Faker::Lorem.sentence(1)}\" .
-    <#{xid}> <question.body> \"#{Faker::Lorem.paragraph(20)}\" .
-    <#{xid}> <question.written_by> <#{user_xids.sample()}> .
-    <#{xid}> <question.created_at> \"#{created_at}\"^^<xs:dateTime> .
-"}.each do |line|
+  line = "<#{xid}> <question.title> \"#{Faker::Lorem.sentence(1)}\" .
+<#{xid}> <question.body> \"#{Faker::Lorem.paragraph(20)}\" .
+<#{xid}> <question.written_by> <#{user_xids.sample()}> .
+<#{xid}> <question.created_at> \"#{created_at}\"^^<xs:dateTime> .
+"
+
   set += line
-end
+}
 
 
 answer_xids.map { |xid|
@@ -56,16 +59,25 @@ answer_xids.map { |xid|
 
   question_tree[question_id].push(xid)
 
-  "    <#{question_id}> <answer> <#{xid}> .
-    <#{xid}> <answer.body> \"#{Faker::Lorem.paragraph(20)}\" .
-    <#{xid}> <answer.written_by> <#{author_id}> .
-    <#{xid}> <answer.created_at> \"#{created_at}\"^^<xs:dateTime> .
-    <#{author_id}> <user.view> <v#{vc}> .
-    <v#{vc}> <view.question> <#{question_id}> .
-    <v#{vc}> <view.count> \"#{rand(1..3)}\" .
+  "<#{question_id}> <answer> <#{xid}> .
+<#{xid}> <answer.body> \"#{Faker::Lorem.paragraph(20)}\" .
+<#{xid}> <answer.written_by> <#{author_id}> .
+<#{xid}> <answer.created_at> \"#{created_at}\"^^<xs:dateTime> .
+<#{author_id}> <user.view> <v#{vc}> .
+<v#{vc}> <view.question> <#{question_id}> .
+<v#{vc}> <view.count> \"#{rand(1..3)}\" .
 "}.each do |line|
   set += line
 end
+
+def get_question(qtree, qxids, qids)
+  if qtree[qids[0]].length > 0
+    qtree[qids[0]].sample()
+  end
+
+  qxids.sample()
+end
+
 
 user_xids.map { |xid|
   question_ids = question_tree.keys.sample(3)
@@ -74,36 +86,49 @@ user_xids.map { |xid|
   vc3 = view_counter + 3
   view_counter = view_counter + 3
 
+  q1 = get_question(question_tree, question_xids, question_ids)
+  q2 = get_question(question_tree, question_xids, question_ids)
+  q3 = get_question(question_tree, question_xids, question_ids)
+  q4 = get_question(question_tree, question_xids, question_ids)
+  q5 = get_question(question_tree, question_xids, question_ids)
+  q6 = get_question(question_tree, question_xids, question_ids)
 
-  "    <#{xid}> <user_name> \"#{Faker::Name.name}\" .
-    <#{question_tree[question_ids[0]].sample()}> <answer.upvoted_by> <#{xid}> .
-    <#{question_tree[question_ids[0]].sample()}> <answer.upvoted_by> <#{xid}> .
-    <#{question_tree[question_ids[1]].sample()}> <answer.upvoted_by> <#{xid}> .
-    <#{question_tree[question_ids[1]].sample()}> <answer.upvoted_by> <#{xid}> .
-    <#{question_tree[question_ids[2]].sample()}> <answer.upvoted_by> <#{xid}> .
-    <#{question_tree[question_ids[2]].sample()}> <answer.upvoted_by> <#{xid}> .
 
-    <#{xid}> <user.view> <v#{vc1}> .
-    <v#{vc1}> <view.question> <#{question_ids[0]}> .
-    <v#{vc1}> <view.count> \"#{rand(1..3)}\" .
-    <#{xid}> <user.view> <v#{vc2}> .
-    <v#{vc2}> <view.question> <#{question_ids[1]}> .
-    <v#{vc2}> <view.count> \"#{rand(1..3)}\" .
-    <#{xid}> <user.view> <v#{vc3}> .
-    <v#{vc3}> <view.question> <#{question_ids[2]}> .
-    <v#{vc3}> <view.count> \"#{rand(1..3)}\" .
-"}.each do |line|
+  "<#{xid}> <user_name> \"#{Faker::Name.name}\" .
+<#{q1}> <answer.upvoted_by> <#{xid}> .
+<#{q2}> <answer.upvoted_by> <#{xid}> .
+<#{q3}> <answer.upvoted_by> <#{xid}> .
+<#{q4}> <answer.upvoted_by> <#{xid}> .
+<#{q5}> <answer.upvoted_by> <#{xid}> .
+<#{q6}> <answer.upvoted_by> <#{xid}> .
+
+<#{xid}> <user.view> <v#{vc1}> .
+<v#{vc1}> <view.question> <#{question_ids[0]}> .
+<v#{vc1}> <view.count> \"#{rand(1..3)}\" .
+<#{xid}> <user.view> <v#{vc2}> .
+<v#{vc2}> <view.question> <#{question_ids[1]}> .
+<v#{vc2}> <view.count> \"#{rand(1..3)}\" .
+<#{xid}> <user.view> <v#{vc3}> .
+<v#{vc3}> <view.question> <#{question_ids[2]}> .
+<v#{vc3}> <view.count> \"#{rand(1..3)}\" ."}.each do |line|
   set += line
 end
 
-set += '  }'
+set += ''
 
 query = %Q(
 mutation {
   #{schema}
 
-  #{set}
+  set {
+    #{set}
+  }
 }
 )
 
-puts query
+File.open('./db/seeds.gqpm', 'w') { |file| file.write(query) }
+
+
+# rdf = set
+#
+# File.open('./seeds.rdf', 'w') { |file| file.write(rdf) }
