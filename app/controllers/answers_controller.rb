@@ -19,13 +19,17 @@ class AnswersController < ApplicationController
 #   end
 
   def create
+    today = Date.today.to_datetime.rfc3339
+
     question_id = params[:answer][:question_id]
-    answer.body = params[:answer][:"answer.body"]
+    answer_body = params[:answer][:"answer.body"]
     query = %Q(
 mutation {
   set {
     <#{question_id}> <answer> <_:answer> .
-    <_:answer> <answer.body> "#{answer.body}" .
+    <_:answer> <answer.body> "#{answer_body}" .
+    <_:answer> <answer.written_by> <u1> .
+    <_:answer> <answer.created_at> "#{today}"^^<xs:dateTime> .
   }
 }
 )

@@ -4,7 +4,7 @@ class UpvotesController < ApplicationController
     query = %Q(
 mutation {
   set {
-    <u2> <answer.upvoted_by> <#{answer_id}> .
+    <u1> <answer.upvoted_by> <#{answer_id}> .
   }
 }
 

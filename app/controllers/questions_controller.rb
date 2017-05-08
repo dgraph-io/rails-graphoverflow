@@ -23,13 +23,13 @@ class QuestionsController < ApplicationController
     query = %Q(
 mutation {
   set {
-    <_:view> <viewer> <u2> .
+    <_:view> <viewer> <u1> .
     <_:view> <viewee> <#{params[:id]}> .
   }
 }
 
 {
-  user as var(id: u2)
+  user as var(id: u1)
 
   question(id: #{params[:id]}) {
     _uid_
@@ -62,11 +62,13 @@ mutation {
   end
 
   def create
+    today = Date.today.to_datetime.rfc3339
     query = %Q(
 mutation {
   set {
     <_:question> <question.body> "#{params[:question][:"question.body"]}" .
     <_:question> <question.title> "#{params[:question][:"question.title"]}" .
+    <_:question> <question.created_at> "#{today}"^^<xs:dateTime> .
   }
 }
 )
