@@ -1,5 +1,5 @@
 <%= form_for :answer, { url: target, method: method, remote: true } do |f| %>
-  <%= f.text_area :answer_body, value: answer.fetch(:answer_body, ''), class: 'answer-form form-control' %><br />
+  <%= f.text_area :"answer.body", value: answer.fetch(:"answer.body", ''), class: 'answer-form form-control' %><br />
   <%= f.hidden_field :question_id, value: question_id %>
 
   <div class="actions">

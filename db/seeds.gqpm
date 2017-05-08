@@ -1,9 +1,9 @@
 mutation {
   schema {
-    question_title: string .
-    question_body: string .
+    question.title: string .
+    question.body: string .
     topic_name: string .
-    answer_body: string .
+    answer.body: string .
     comment_body: string .
     question_topic: uid @reverse .
     upvoted_by: uid @reverse .
@@ -13,6 +13,7 @@ mutation {
     answer: uid @reverse .
     view_count: int @index .
     upvoted: uid @reverse .
+    view_count: int .
   }
 
   set {
@@ -26,21 +27,25 @@ mutation {
     <u2> <user_name> "alex" .
     <u3> <user_name> "daniel" .
     <u4> <user_name> "conor" .
-    <u5> <user_name> "joanna" .'
+    <u5> <user_name> "joanna" .
     <u6> <user_name> "holly" .
     <u7> <user_name> "michelle" .
     <u8> <user_name> "page" .
 
-    <q1> <question_title> "aaaa" .
-    <q1> <question_body> "asdf" .
+    <q1> <question.title> "aaaa" .
+    <q1> <question.body> "asdf" .
     <q1> <question_topic> <t1> .
     <q1> <answer> <a1-q1> .
-    <a1-q1> <answer_body> "asdf" .
+    <a1-q1> <answer.body> "asdf" .
     <c1-q1> <comment_body> "asdf" .
     <c1-q1> <written_by> <u1> .
 
-    <v1> <viewer> <u1> .
+    <v1> <viewer> <u3> .
     <v1> <viewee> <q1> .
+    <v1> <view_count> "1" .
+    <v2> <viewer> <u4> .
+    <v2> <viewee> <q1> .
+    <v2> <view_count> "1" .
 
     <u1> <upvoted> <a1-q1> .
   }

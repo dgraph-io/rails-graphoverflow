@@ -6,8 +6,8 @@ class AnswersController < ApplicationController
 # {
 #   answer(id:#{params[:id]}) {
 #     _uid_
-#     question_body
-#     question_title
+#     question.body
+#     question.title
 #   }
 # }
 # )
@@ -20,12 +20,12 @@ class AnswersController < ApplicationController
 
   def create
     question_id = params[:answer][:question_id]
-    answer_body = params[:answer][:answer_body]
+    answer.body = params[:answer][:"answer.body"]
     query = %Q(
 mutation {
   set {
     <#{question_id}> <answer> <_:answer> .
-    <_:answer> <answer_body> "#{answer_body}" .
+    <_:answer> <answer.body> "#{answer.body}" .
   }
 }
 )
@@ -42,7 +42,7 @@ mutation {
 #     query = %Q(
 # mutation {
 #   set {
-#     <#{answer_id}> <answer_body> "#{params[:answer][:answer_body]}" .
+#     <#{answer_id}> <answer.body> "#{params[:answer][:"answer.body"]}" .
 #   }
 # }
 # )

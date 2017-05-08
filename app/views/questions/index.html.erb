@@ -9,10 +9,10 @@
   <% @questions.each do |question| %>
     <li class="question">
       <h2>
-        <%= link_to question[:question_title], controller: 'questions', action: 'show', id: question[:_uid_] %>
+        <%= link_to question[:"question.title"], controller: 'questions', action: 'show', id: question[:_uid_] %>
       </h2>
       <p>
-        <%= truncate question[:question_body] %>
+        <%= truncate question[:"question.body"] %>
       </p>
     </li>
   <% end %>

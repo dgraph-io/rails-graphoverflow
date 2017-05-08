@@ -6,10 +6,10 @@ class QuestionsController < ApplicationController
   def index
     query = %q(
 {
-  questions(func: gt(count(question_body), 0), first: 20) {
+  questions(func: gt(count(question.body), 0), first: 20) {
     _uid_
-    question_body
-    question_title
+    question.body
+    question.title
   }
 }
 )
@@ -23,25 +23,25 @@ class QuestionsController < ApplicationController
     query = %Q(
 mutation {
   set {
-    <_:view> <viewer> <u1> .
+    <_:view> <viewer> <u2> .
     <_:view> <viewee> <#{params[:id]}> .
   }
 }
 
 {
-  user as var(id: u1)
+  user as var(id: u2)
 
   question(id: #{params[:id]}) {
     _uid_
-    question_body
-    question_title
-    answer(first: 10) @filter(gt(count(answer_body), 0)) {
+    question.body
+    question.title
+    answer(first: 10) @filter(gt(count(answer.body), 0)) {
       _uid_
-      answer_body
-      ~upvoted @filter(var(user)) {
+      answer.body
+      ~answer.upvoted_by @filter(var(user)) {
         user_name
       }
-      count(~upvoted)
+      count(~answer.upvoted_by)
     }
   }
 }
@@ -49,8 +49,6 @@ mutation {
 
     client = ::DgraphClient.new()
     json = client.do(query)
-
-    puts json
 
     @question = json[:question][0]
     @answers = @question.fetch(:answer, [])
@@ -67,8 +65,8 @@ mutation {
     query = %Q(
 mutation {
   set {
-    <_:question> <question_body> "#{params[:question][:question_body]}" .
-    <_:question> <question_title> "#{params[:question][:question_title]}" .
+    <_:question> <question.body> "#{params[:question][:"question.body"]}" .
+    <_:question> <question.title> "#{params[:question][:"question.title"]}" .
   }
 }
 )
@@ -86,8 +84,8 @@ mutation {
     query = %Q(
 mutation {
   set {
-    <#{question_id}> <question_body> "#{params[:question][:question_body]}" .
-    <#{question_id}> <question_title> "#{params[:question][:question_title]}" .
+    <#{question_id}> <question.body> "#{params[:question][:"question.body"]}" .
+    <#{question_id}> <question.title> "#{params[:question][:"question.title"]}" .
   }
 }
 )
@@ -124,8 +122,8 @@ mutation {
 {
   question(id:#{params[:id]}) {
     _uid_
-    question_body
-    question_title
+    question.body
+    question.title
   }
 }
 )
