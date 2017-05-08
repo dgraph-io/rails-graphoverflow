@@ -20,28 +20,30 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    question_id = params[:id]
+    increment_view(user_id: "u1", question_id: question_id)
     query = %Q(
 mutation {
   set {
     <_:view> <viewer> <u1> .
-    <_:view> <viewee> <#{params[:id]}> .
+    <_:view> <viewee> <#{question_id}> .
   }
 }
 
 {
   user as var(id: u1)
 
-  question(id: #{params[:id]}) {
+  question(id: #{question_id}) {
     _uid_
     question.body
     question.title
     answer(first: 10) @filter(gt(count(answer.body), 0)) {
       _uid_
       answer.body
-      ~answer.upvoted_by @filter(var(user)) {
+      answer.upvoted_by @filter(var(user)) {
         user_name
       }
-      count(~answer.upvoted_by)
+      count(answer.upvoted_by)
     }
   }
 }
@@ -134,5 +136,20 @@ mutation {
     json = client.do(query)
 
     @question = json[:question][0]
+  end
+
+  def increment_view(params)
+    user_id = params[:user_id]
+    question_id = params[:question_id]
+
+    query = %Q(
+{
+  me(id: #{user_id}) {
+    user.view {
+      view_count: view_count
+    }
+  }
+}
+    )
   end
 end

@@ -1,5 +1,5 @@
-<% not_upvoted = answer[:"~answer.upvoted_by"].length == 1 %>
-<% upvote_count = answer[:"~answer.upvoted_by"].reduce(0) { |memo,elm| memo + elm.fetch(:count, 0) }%>
+<% not_upvoted = answer[:"answer.upvoted_by"].length == 1 %>
+<% upvote_count = answer[:"answer.upvoted_by"].reduce(0) { |memo,elm| memo + elm.fetch(:count, 0) }%>
 
 <li class="answer">
   <section class="body">
