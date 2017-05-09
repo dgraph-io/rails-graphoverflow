@@ -9,4 +9,12 @@
   &:first-child {
     border-top: 1px solid #efefef;
   }
+
+  .actions {
+    float: right;
+  }
+}
+
+.upvote-count {
+  margin-bottom: 21px;
 }

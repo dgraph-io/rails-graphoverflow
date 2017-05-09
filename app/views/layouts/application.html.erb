@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>DgraphRailsExample</title>
+    <title>GraphOverflow</title>
     <%= csrf_meta_tags %>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
@@ -14,18 +14,22 @@
 
   <body>
     <nav class="navbar navbar-light bg-faded">
-      <a class="navbar-brand" href="/">
-        <img src="/assets/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-        GraphOverflow
-      </a>
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <img src="/assets/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+          GraphOverflow
+        </a>
+      </div>
     </nav>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <%= yield %>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <%= yield %>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

@@ -1,3 +1,11 @@
 // Place all the styles related to the questions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.question {
+  padding: 20px 0;
+  border-bottom: 1px solid #d6d6d6;
+
+  .author-name, .timestamp {
+    font-weight: 600;
+  }
+}

@@ -14,11 +14,14 @@ class QuestionsController < ApplicationController
     question.written_by {
       user_name
     }
+    answer_count: count(answer)
   }
 }
 )
     client = ::DgraphClient.new()
     json = client.do(query)
+
+    puts json
 
     @questions = json.fetch(:questions, [])
   end

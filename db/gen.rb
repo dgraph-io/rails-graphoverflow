@@ -1,12 +1,12 @@
 require 'faker'
 require 'date'
 
-num_users = 100
-num_questions = 20
-num_answers = 20
-# num_users = 10000
-# num_questions = 20000
-# num_answers = 30000
+# num_users = 100
+# num_questions = 20
+# num_answers = 20
+num_users = 10000
+num_questions = 20000
+num_answers = 30000
 
 user_xids = Array.new(num_users) { |i| "u#{i+1}" }
 question_xids = Array.new(num_questions) { |i| "q#{i+1}" }
@@ -36,7 +36,7 @@ schema = %Q{
 view_counter = 0
 set = ""
 
-question_xids.each_with_index { |xid|
+question_xids.each_with_index do |xid, index|
   created_at = (Date.today - rand(1..30)).to_datetime.rfc3339
   question_tree[xid] = []
 
@@ -47,10 +47,11 @@ question_xids.each_with_index { |xid|
 "
 
   set += line
-}
+  puts "question #{index} of #{num_questions}" if index % 1000 == 0
+end
 
 
-answer_xids.map { |xid|
+answer_xids.each_with_index do |xid, index|
   author_id = user_xids.sample()
   created_at = (Date.today - rand(1..90)).to_datetime.rfc3339
   question_id = question_xids.sample()
@@ -59,15 +60,16 @@ answer_xids.map { |xid|
 
   question_tree[question_id].push(xid)
 
-  "<#{question_id}> <answer> <#{xid}> .
+  line = "<#{question_id}> <answer> <#{xid}> .
 <#{xid}> <answer.body> \"#{Faker::Lorem.paragraph(20)}\" .
 <#{xid}> <answer.written_by> <#{author_id}> .
 <#{xid}> <answer.created_at> \"#{created_at}\"^^<xs:dateTime> .
 <#{author_id}> <user.view> <v#{vc}> .
 <v#{vc}> <view.question> <#{question_id}> .
 <v#{vc}> <view.count> \"#{rand(1..3)}\" .
-"}.each do |line|
+"
   set += line
+  puts "answer #{index} of #{num_answers}" if index % 1000 == 0
 end
 
 def get_question(qtree, qxids, qids)
@@ -79,7 +81,7 @@ def get_question(qtree, qxids, qids)
 end
 
 
-user_xids.map { |xid|
+user_xids.each_with_index do |xid, index|
   question_ids = question_tree.keys.sample(3)
   vc1 = view_counter + 1
   vc2 = view_counter + 2
@@ -94,7 +96,7 @@ user_xids.map { |xid|
   q6 = get_question(question_tree, question_xids, question_ids)
 
 
-  "
+  line = "
 <#{xid}> <user_name> \"#{Faker::Name.name}\" .
 <#{q1}> <answer.upvoted_by> <#{xid}> .
 <#{q2}> <answer.upvoted_by> <#{xid}> .
@@ -111,8 +113,10 @@ user_xids.map { |xid|
 <v#{vc2}> <view.count> \"#{rand(1..3)}\" .
 <#{xid}> <user.view> <v#{vc3}> .
 <v#{vc3}> <view.question> <#{question_ids[2]}> .
-<v#{vc3}> <view.count> \"#{rand(1..3)}\" ."}.each do |line|
+<v#{vc3}> <view.count> \"#{rand(1..3)}\" ."
+
   set += line
+  puts "user #{index} of #{num_users}" if index % 1000 == 0
 end
 
 set += ''
@@ -127,9 +131,9 @@ mutation {
 }
 )
 
-File.open('./db/seeds.gqpm', 'w') { |file| file.write(query) }
+# File.open('./db/seeds.gqpm', 'w') { |file| file.write(query) }
 
-#
-# rdf = set
-#
-# File.open('./db/seeds.rdf', 'w') { |file| file.write(rdf) }
+
+rdf = set
+
+File.open('./db/seeds.rdf', 'w') { |file| file.write(rdf) }

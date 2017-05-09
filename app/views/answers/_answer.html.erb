@@ -3,13 +3,15 @@
 
 <li class="answer">
   <section class="body">
-    <div class="upvote-count"><%= upvote_count %></div>
+    <div class="actions">
+      <%= link_to 'Remove', "/answers/#{answer[:_uid_]}?question_id=#{question[:_uid_]}", method: :delete, data: { confirm: 'Are you sure?' } %>
+    </div>
+    <div class="upvote-count">
+      <%= pluralize upvote_count, 'upvote' %>
+      <% if not_upvoted %>
+        <%= link_to 'Upvote', "/answers/#{answer[:_uid_]}/upvotes", method: :post %>
+      <% end %>
+    </div>
     <%= answer[:"answer.body"] %>
   </section>
-  <div class="actions">
-    <%= link_to 'Remove', "/answers/#{answer[:_uid_]}?question_id=#{question[:_uid_]}", method: :delete, data: { confirm: 'Are you sure?' } %>
-    <% if not_upvoted %>
-      <%= link_to 'Upvote', "/answers/#{answer[:_uid_]}/upvotes", method: :post %>
-    <% end %>
-  </div>
 </li>

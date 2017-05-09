@@ -1,10 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Questions</h1>
+<div class="row">
+  <div class="col-12">
+    <span>Showing <%= @questions.length %> questions</span>
+
+    <%= link_to 'New Question', new_question_path, class: 'btn btn-primary float-right' %>
+  </div>
+</div>
+
+
 
 <hr>
 
-<%= link_to 'New Question', new_question_path, class: 'btn btn-primary float-right' %>
 <ul class="questions list-unstyled">
   <% @questions.each do |question| %>
     <li class="question">
@@ -12,12 +19,20 @@
         <%= link_to question[:"question.title"], controller: 'questions', action: 'show', id: question[:_uid_] %>
       </h2>
       <p>
-        <%= truncate question[:"question.body"] %>
+        <%= truncate question[:"question.body"], length: 300 %>
       </p>
 
-      <p>
-        <%= question[:"question.written_by"][:user_name] %>
-      </p>
+      <div class="row">
+        <div class="col-12 col-sm-3">
+          <%= question[:answer][0][:"answer_count"] %> answers
+        </div>
+        <div class="col-12 col-sm-3">
+          Asked by <span class="author-name"><%= question[:"question.written_by"][0][:user_name] %></span>
+        </div>
+        <div class="col-12 col-sm-3">
+          On <span class="timestamp"><%= question[:"question.created_at"] %></span>
+        </div>
+      </div>
     </li>
   <% end %>
 </ul>

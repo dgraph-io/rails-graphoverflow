@@ -8,6 +8,8 @@
   <%= @question[:"question.body"] %>
 </p>
 
+<h2><%= pluralize @answers.length, 'answer' %></h2>
+
 <ul class="answers list-unstyled">
   <% @answers.each do |answer| %>
     <%= render partial: 'answers/answer', locals: { answer: answer, question: @question } %>
