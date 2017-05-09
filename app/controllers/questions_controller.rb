@@ -28,7 +28,7 @@ class QuestionsController < ApplicationController
 
   def show
     question_id = params[:id]
-    increment_view(user_id: "u1", question_id: question_id)
+    record_view(user_id: "u1", question_id: question_id)
     query = %Q(
 mutation {
   set {
@@ -145,18 +145,85 @@ mutation {
     @question = json[:question][0]
   end
 
-  def increment_view(params)
+  # get_current_viewcount gets the current view count of the user for the question
+  def get_current_viewcount(params)
     user_id = params[:user_id]
     question_id = params[:question_id]
 
     query = %Q(
 {
-  me(id: #{user_id}) {
-    user.view {
-      view_count: view_count
+  vid as var(id: #{question_id})
+
+  me(id: #{user_id}) @cascade {
+    user.view  {
+      _uid_
+      view.count
+      view.question @filter(var (vid))
     }
   }
 }
-    )
+)
+
+    client = ::DgraphClient.new()
+    json = client.do(query)
+
+    if json[:me]
+      return {
+        :_uid_ => json[:me][0][:'user.view'][0][:_uid_],
+        :'view.count' => json[:me][0][:'user.view'][0][:'view.count']
+      }
+    else
+      return 0
+    end
+  end
+
+  def create_view(params)
+    user_id = params[:user_id]
+    question_id = params[:question_id]
+
+    query = %Q(
+mutation {
+  set {
+    <_:v> <view.count> "0" .
+    <_:v> <view.question> <#{question_id}> .
+    <#{user_id}> <user.view> <_:v> .
+  }
+}
+)
+
+    client = ::DgraphClient.new()
+    client.do(query)
+  end
+
+  def increment_view(params, current_viewcount)
+    user_id = params[:user_id]
+    question_id = params[:question_id]
+
+    query = %Q(
+mutation {
+  set {
+    <#{current_viewcount[:_uid_]}> <view.count> "#{current_viewcount[:'view.count'] + 1}" .
+  }
+}
+)
+
+    client = ::DgraphClient.new()
+    client.do(query)
+  end
+
+  # record_view either creates a view or increments the  view.count of an existing
+  # view
+  def record_view(params)
+    user_id = params[:user_id]
+    question_id = params[:question_id]
+
+    current_viewcount = get_current_viewcount(params)
+    puts current_viewcount
+
+    if current_viewcount == 0
+      create_view(params)
+    else
+      increment_view(params, current_viewcount)
+    end
   end
 end

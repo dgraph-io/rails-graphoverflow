@@ -19,7 +19,7 @@ schema = %Q{
     question.title: string .
     question.body: string .
     question.written_by: uid @reverse .
-    question.created_at: date .
+    question.created_at: datetime .
 
     answer: uid @reverse .
     answer.title: string .
