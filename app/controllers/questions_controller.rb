@@ -30,13 +30,6 @@ class QuestionsController < ApplicationController
     question_id = params[:id]
     record_view(user_id: "u1", question_id: question_id)
     query = %Q(
-mutation {
-  set {
-    <_:view> <viewer> <u1> .
-    <_:view> <viewee> <#{question_id}> .
-  }
-}
-
 {
   user as var(id: u1)
 
