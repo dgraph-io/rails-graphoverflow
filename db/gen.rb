@@ -30,6 +30,7 @@ schema = %Q{
     user.view: uid @reverse .
     view.count: int .
     view.question: uid @reverse .
+    upvoted: uid @reverse .
   }
 }
 
