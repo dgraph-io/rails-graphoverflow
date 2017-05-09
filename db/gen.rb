@@ -4,9 +4,9 @@ require 'date'
 num_users = 100
 num_questions = 20
 num_answers = 20
-# num_users = 1000000
-# num_questions = 100000
-# num_answers = 3000000
+# num_users = 10000
+# num_questions = 20000
+# num_answers = 30000
 
 user_xids = Array.new(num_users) { |i| "u#{i+1}" }
 question_xids = Array.new(num_questions) { |i| "q#{i+1}" }
@@ -71,11 +71,11 @@ answer_xids.map { |xid|
 end
 
 def get_question(qtree, qxids, qids)
-  if qtree[qids[0]].length > 0
-    qtree[qids[0]].sample()
+  for i in 0..(qids.length - 1)
+    if qtree[qids[i]].length > 0
+      return qtree[qids[i]].sample()
+    end
   end
-
-  qxids.sample()
 end
 
 
@@ -94,7 +94,8 @@ user_xids.map { |xid|
   q6 = get_question(question_tree, question_xids, question_ids)
 
 
-  "<#{xid}> <user_name> \"#{Faker::Name.name}\" .
+  "
+<#{xid}> <user_name> \"#{Faker::Name.name}\" .
 <#{q1}> <answer.upvoted_by> <#{xid}> .
 <#{q2}> <answer.upvoted_by> <#{xid}> .
 <#{q3}> <answer.upvoted_by> <#{xid}> .
@@ -128,7 +129,7 @@ mutation {
 
 File.open('./db/seeds.gqpm', 'w') { |file| file.write(query) }
 
-
+#
 # rdf = set
 #
-# File.open('./seeds.rdf', 'w') { |file| file.write(rdf) }
+# File.open('./db/seeds.rdf', 'w') { |file| file.write(rdf) }

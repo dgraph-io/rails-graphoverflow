@@ -10,6 +10,10 @@ class QuestionsController < ApplicationController
     _uid_
     question.body
     question.title
+    question.created_at
+    question.written_by {
+      user_name
+    }
   }
 }
 )
