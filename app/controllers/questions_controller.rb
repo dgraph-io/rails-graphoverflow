@@ -43,7 +43,7 @@ class QuestionsController < ApplicationController
       answer.upvoted_by @filter(var(user)) {
         user_name
       }
-      count(answer.upvoted_by)
+      upvote_count: count(answer.upvoted_by)
     }
   }
 }
