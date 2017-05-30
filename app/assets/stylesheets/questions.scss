@@ -5,6 +5,10 @@
   padding: 20px 0;
   border-bottom: 1px solid #d6d6d6;
 
+  &:first-child {
+    padding-top: 0;
+  }
+
   .author-name, .timestamp {
     font-weight: 600;
   }

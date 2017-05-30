@@ -17,3 +17,8 @@
 main {
   padding: 20px 0;
 }
+
+.section-header {
+  font-size: 19px;
+  margin-bottom: 19px;
+}

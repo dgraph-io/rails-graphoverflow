@@ -6,7 +6,19 @@ class QuestionsController < ApplicationController
   def index
     query = %q(
 {
-  questions(func: gt(count(question.body), 0), first: 20) {
+  # get questions to show in the home page
+  var(func: gt(count(question.body), 0)) {
+    answer {
+      uc as count(answer.upvoted_by)
+    }
+    ac as count(answer)
+    uc1 as sum(var(uc))
+    ds as question.created_at
+
+    score as math(exp(-0.0000001 * since(ds)) * 0.7 + ac * 0.2  + uc1 * 0.4)
+  }
+
+  questions(id: var(score), orderdesc: var(score), first: 20) {
     _uid_
     question.body
     question.title
@@ -16,14 +28,43 @@ class QuestionsController < ApplicationController
     }
     answer_count: count(answer)
   }
+
+  # get interacted_questions
+  var(id: u1) {
+    user.view {
+      q1 as view.question {
+        question.title
+      }
+    }
+
+    ~answer.upvoted_by {
+      q2 as ~answer {
+        question.title
+      }
+    }
+
+    ~answer.written_by {
+      q3 as ~answer {
+        question.title
+      }
+    }
+  }
+
+  interacted_questions(id: var(q1, q2, q3)) {
+    _uid_
+    question.body
+    question.title
+    question.written_by {
+      user_name
+    }
+  }
 }
 )
     client = ::DgraphClient.new()
     json = client.do(query)
 
-    puts json
-
     @questions = json.fetch(:questions, [])
+    @interacted_questions = json.fetch(:interacted_questions, [])
   end
 
   def show
