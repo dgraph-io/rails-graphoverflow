@@ -32,25 +32,19 @@ class QuestionsController < ApplicationController
   # get interacted_questions
   var(id: u1) {
     user.view {
-      q1 as view.question {
-        question.title
-      }
+      q1 as view.question
     }
 
     ~answer.upvoted_by {
-      q2 as ~answer {
-        question.title
-      }
+      q2 as ~answer
     }
 
     ~answer.written_by {
-      q3 as ~answer {
-        question.title
-      }
+      q3 as ~answer
     }
   }
 
-  interacted_questions(id: var(q1, q2, q3)) {
+  interacted_questions(id: var(q1, q2, q3), first: 20) {
     _uid_
     question.body
     question.title
